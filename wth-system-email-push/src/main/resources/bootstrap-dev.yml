@@ -1,0 +1,89 @@
+server:
+  port: 0
+
+app:
+  mail:
+    from-mail: # 发送邮件的发件人邮箱地址
+    to-mail: # 接收邮件的邮箱地址，多个用逗号分隔
+    device-mail: # 设备邮件地址，多个用逗号分隔
+    sim-mail: # SIM卡邮件地址，多个用逗号分隔
+
+spring:
+  application:
+    name: # 服务名称
+  main:
+    allow-circular-references: true
+  mail:
+    host: # mail的smtp服务器地址
+    username: # 邮箱账号
+    password: # 邮箱密码
+    port: 587
+    protocol: smtp # 邮件服务器使用的协议
+    default-encoding: utf-8
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          ssl:
+            trust: "*"
+            checkserveridentity: false
+
+  cloud:
+    nacos:
+      discovery:
+        server-addr: # Nacos服务地址
+        namespace: # Nacos命名空间
+      config:
+        server-addr: # Nacos服务地址
+        namespace: # Nacos命名空间
+        extension-configs:
+          - data-id: spring-redis.yaml
+            group: DEFAULT_GROUP
+            refresh: false
+
+          - data-id: spring-kafka.yaml
+            group: DEFAULT_GROUP
+            refresh: false
+
+          - data-id: mybatis.yaml
+            group: DEFAULT_GROUP
+            refresh: false
+
+  shardingsphere:
+    datasource:
+      names: data,device-data,finance-data
+
+
+      data:
+        type:
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url:
+        username:
+        password:
+        initialSize: 5
+        minIdle: 5
+        maxActive: 50
+        # 配置获取连接等待超时的时间
+        maxWait: 60000
+        removeAbandoned: false
+        removeAbandonedTimeout: 1800
+        testWhileIdle: true
+        testOnBorrow: false
+        testOnReturn: false
+        validationQuery: SELECT 1
+        # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+        timeBetweenEvictionRunsMillis: 28700
+        # 配置一个连接在池中最小生存的时间，单位是毫秒
+        minEvictableIdleTimeMillis: 18000000
+        # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+        filters: stat,wall,log4j2
+
+    sharding:
+      default-data-source-name: data
+      tables:
+        # 表
+    props:
+      sql:
+        show: false
